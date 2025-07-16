@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Image } from "../models/image.js";
 import { Comment } from "../models/comment.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 export const commentRouter = Router();
 
@@ -9,7 +10,7 @@ export const commentRouter = Router();
  * Copilot autocomplete and manually editted:
  */
 
-commentRouter.post("/", async (req, res) => {
+commentRouter.post("/", isAuthenticated, async (req, res) => {
   try {
     const { author, content, imageId } = req.body;
 
@@ -39,7 +40,7 @@ commentRouter.post("/", async (req, res) => {
   }
 });
 
-commentRouter.delete("/:id", async (req, res) => {
+commentRouter.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {

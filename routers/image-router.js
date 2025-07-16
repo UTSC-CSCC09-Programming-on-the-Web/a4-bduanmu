@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Image } from "../models/image.js";
 import { Comment } from "../models/comment.js";
+import { isAuthenticated } from "../middleware/auth.js";
 import path from "path";
 import multer from "multer";
 
@@ -13,7 +14,7 @@ export const imageRouter = Router();
  * Copilot autocomplete and manually editted:
  */
 
-imageRouter.post("/", upload.single("image"), async (req, res) => {
+imageRouter.post("/", upload.single("image"), isAuthenticated, async (req, res) => {
   try {
     const { author, content } = req.body;
 
@@ -166,7 +167,7 @@ imageRouter.get("/:id", async (req, res) => {
   }
 });
 
-imageRouter.delete("/:id", async (req, res) => {
+imageRouter.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
@@ -216,7 +217,7 @@ imageRouter.get("/:id/file", async (req, res) => {
   }
 });
 
-imageRouter.get("/:id/comments", async (req, res) => {
+imageRouter.get("/:id/comments", isAuthenticated, async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: "Invalid image ID" });
