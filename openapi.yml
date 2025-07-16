@@ -1,0 +1,508 @@
+# The OpenAPI specification were generated using
+# the following GitHub Copilot prompt:
+#
+# Generate an OpenAPI specification for this app
+
+openapi: 3.0.3
+info:
+  title: Web Gallery API
+  version: 1.0.0
+  description: API for uploading images, displaying images, and managing comments in a web gallery app.
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /images:
+    get:
+      summary: Get a paginated list of images
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of images to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Number of images to skip
+      responses:
+        "200":
+          description: List of images
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  images:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Image"
+                  totalCount:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+    post:
+      summary: Upload a new image
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                author:
+                  type: string
+                content:
+                  type: string
+                  description: Image title/caption
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Image posted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  image:
+                    $ref: "#/components/schemas/Image"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+  /images/author/{authorUsername}:
+    get:
+      summary: Get images by a specific author
+      parameters:
+        - in: path
+          name: authorUsername
+          required: true
+          schema:
+            type: string
+          description: Username of the author
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of images to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Number of images to skip
+      responses:
+        "200":
+          description: List of images by author
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  images:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Image"
+                  totalCount:
+                    type: integer
+  /images/count:
+    get:
+      summary: Get the total number of images
+      responses:
+        "200":
+          description: Image count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  count:
+                    type: integer
+  /images/count/author/{authorUsername}:
+    get:
+      summary: Get the total number of images by a specific author
+      parameters:
+        - in: path
+          name: authorUsername
+          required: true
+          schema:
+            type: string
+          description: Username of the author
+      responses:
+        "200":
+          description: Image count by author
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  count:
+                    type: integer
+  /images/{id}:
+    get:
+      summary: Get a single image by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Image fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  image:
+                    $ref: "#/components/schemas/Image"
+        "404":
+          description: Image not found
+    delete:
+      summary: Delete an image by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Image deleted successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - only image owner can delete
+        "404":
+          description: Image not found
+  /images/{id}/file:
+    get:
+      summary: Get the image file (binary)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: The image file
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Image not found
+  /images/{id}/comments:
+    get:
+      summary: Get comments for a specific image
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Image ID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of comments for the image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  comments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+        "404":
+          description: Image not found
+  /comments:
+    post:
+      summary: Post a comment for an image
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageId:
+                  type: integer
+                author:
+                  type: string
+                content:
+                  type: string
+              required:
+                - imageId
+                - author
+                - content
+      responses:
+        "201":
+          description: Comment posted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  comment:
+                    $ref: "#/components/schemas/Comment"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Image not found
+  /comments/{id}:
+    delete:
+      summary: Delete a comment by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Comment deleted successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - only comment author or gallery owner can delete
+        "404":
+          description: Comment not found
+  /users:
+    get:
+      summary: Get a paginated list of users
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of users to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Number of users to skip
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  totalCount:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+  /users/signup:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 32
+                password:
+                  type: string
+                  minLength: 6
+              required:
+                - username
+                - password
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  userId:
+                    type: integer
+                  username:
+                    type: string
+        "400":
+          description: Bad request - validation error
+        "409":
+          description: Username already exists
+  /users/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  userId:
+                    type: integer
+                  username:
+                    type: string
+        "400":
+          description: Bad request - missing credentials
+        "401":
+          description: Incorrect username or password
+  /users/logout:
+    post:
+      summary: Logout user (placeholder endpoint)
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /users/me:
+    get:
+      summary: Get current user information
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+        author:
+          type: string
+        title:
+          type: string
+        image:
+          type: object
+          properties:
+            path:
+              type: string
+            mimetype:
+              type: string
+        date:
+          type: string
+          format: date-time
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        imageId:
+          type: integer
+        author:
+          type: string
+        content:
+          type: string
+        date:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string

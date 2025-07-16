@@ -1,0 +1,40 @@
+<!--
+  The following code was generated using the
+  following Github Copilot prompt and manually editted:
+  
+  Make the application a SPA with javascript loading all pages.
+
+  Add a signup and login page.
+-->
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Web Gallery</title>
+    <link href="styles/cols.css" rel="stylesheet" type="text/css" />
+    <link href="styles/main.css" rel="stylesheet" type="text/css" />
+    <link href="styles/comment.css" rel="stylesheet" type="text/css" />
+    <link href="styles/form.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Main SPA container - all views will be rendered here -->
+    <div id="app">
+      <!-- Content will be dynamically loaded by the router -->
+    </div>
+
+    <!-- Load scripts in proper order -->
+    <script src="js/meact.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

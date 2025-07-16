@@ -1,0 +1,83 @@
+.comments-section {
+  height: 100vh;
+  border-left: 1px solid #353535;
+  display: flex;
+  flex-direction: column;
+}
+
+.comments-section .form {
+  border-top: 1px solid #353535;
+  /* margin-top: auto; */
+}
+
+.comments-header {
+  margin: 20px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-header .button-delete {
+  margin-right: 0;
+}
+
+.comment-container {
+  border-top: 1px solid #353535;
+  overflow-y: auto;
+}
+
+.comment {
+  padding: 0 20px;
+  border-bottom: 1px solid #353535;
+}
+
+.comment .preview-text {
+  margin-top: 0;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.comment-buttons {
+  border-top: 1px solid #353535;
+  width: 100%;
+  min-height: 48px;
+  margin-top: auto;
+}
+
+.no-comments-message {
+  margin-left: 20px;
+}
+
+/** 
+ * The following CSS was generated using the 
+ * following Github Copilot prompt and manually edited: 
+ * 
+ * The comment section should appear below the image 
+ * section on mobile devices
+ */
+
+@media (max-width: 768px) {
+  .comments-section.comments-section-sm {
+    border-left: none;
+    border-top: 1px solid #353535;
+    height: auto;
+  }
+
+  .comments-section-sm .form {
+    order: 0;
+    margin-top: 0;
+  }
+
+  .comments-section-sm .comment-container {
+    order: 1;
+  }
+
+  .comment-buttons {
+    order: 2;
+  }
+}

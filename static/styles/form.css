@@ -1,0 +1,100 @@
+.form-section {
+  display: none;
+  flex-direction: column;
+}
+
+.form-header {
+  margin: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 20px;
+}
+
+/** 
+ * Part of the following CSS reset was generated using the 
+ * following Github Copilot prompt: 
+ * 
+ * Remove the default CSS attributed to the form elements
+ */
+
+.input {
+  all: unset;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  word-break: break-word;
+  margin-bottom: 20px;
+}
+
+.form-input {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #333;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 40%;
+}
+
+.preview-text {
+  font-style: italic;
+  color: #888;
+}
+
+.preview-image-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  max-width: 90%;
+}
+
+.preview .image {
+  margin-top: 0;
+}
+
+/** 
+ * The following CSS was generated using the 
+ * following Github Copilot prompt and manually editted: 
+ * 
+ * When you press the Post button the form should 
+ * appear in the middle of the screen as a popup
+ */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup .form-section,
+.popup .form {
+  background: #222;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+  padding: 32px 24px;
+  width: 350px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.popup.visible {
+  display: flex;
+}
