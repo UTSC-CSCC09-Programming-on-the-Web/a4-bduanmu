@@ -17,7 +17,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const app = express();
-const PORT = 3000;
+const PORT = 80;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
