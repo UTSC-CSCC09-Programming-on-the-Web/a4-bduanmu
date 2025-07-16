@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Image } from "../models/image.js";
 import { Comment } from "../models/comment.js";
-import { isAuthenticated } from "../middleware/auth.js";
+import { authenticateToken } from "../middleware/jwt-auth.js";
 
 export const commentRouter = Router();
 
@@ -10,7 +10,7 @@ export const commentRouter = Router();
  * Copilot autocomplete and manually editted:
  */
 
-commentRouter.post("/", isAuthenticated, async (req, res) => {
+commentRouter.post("/", authenticateToken, async (req, res) => {
   try {
     const { author, content, imageId } = req.body;
 
@@ -36,11 +36,11 @@ commentRouter.post("/", isAuthenticated, async (req, res) => {
 
     res.status(201).json({ message: "Comment posted successfully", comment });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot post comment" });
+    return res.status(500).json({ error });
   }
 });
 
-commentRouter.delete("/:id", isAuthenticated, async (req, res) => {
+commentRouter.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
@@ -55,6 +55,6 @@ commentRouter.delete("/:id", isAuthenticated, async (req, res) => {
     await comment.destroy();
     return res.status(200).json({ message: "Comment deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot delete comment" });
+    return res.status(500).json({ error });
   }
 });

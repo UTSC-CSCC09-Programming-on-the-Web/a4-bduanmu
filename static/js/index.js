@@ -200,15 +200,18 @@
         apiService
           .getImageByIndex(getGalleryOwner(), getCurrentImageIdx())
           .then((image) => {
-            apiService.addComment(image.id, author, content).then(() => {
-              if (submitBtn) {
-                submitBtn.classList.remove("button-loading", "disabled");
-              }
-              // Reset form
-              commentForm.reset();
-              // Reset comment page to 0 to show the new comment
-              setCommentPageNumber(0);
-            });
+            return apiService.addComment(image.id, author, content);
+          })
+          .then(() => {
+            if (submitBtn) {
+              submitBtn.classList.remove("button-loading", "disabled");
+            }
+            // Reset form
+            commentForm.reset();
+            // Reset comment page to 0 to show the new comment
+            setCommentPageNumber(0);
+            // Reload comments to show the new comment
+            loadImageComments();
           })
           .catch((error) => {
             if (submitBtn) {
@@ -424,6 +427,11 @@
 
                 commentContainer.appendChild(commentDiv);
               });
+            })
+            .catch((error) => {
+              console.error("Error loading comments:", error);
+              commentContainer.innerHTML =
+                '<p class="preview-text no-comments-message">Error loading comments. Please try again.</p>';
             });
         }
       });

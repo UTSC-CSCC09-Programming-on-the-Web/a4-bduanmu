@@ -35,28 +35,7 @@ export const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid token" });
     } else {
       console.error("Token verification error:", error);
-      return res.status(500).json({ error: "Token verification failed" });
+      return res.status(500).json({ error });
     }
   }
-};
-
-// Optional middleware - doesn't fail if no token provided
-export const optionalAuth = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  if (!token) {
-    req.user = null;
-    return next();
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findByPk(decoded.userId);
-    req.user = user || null;
-  } catch (error) {
-    req.user = null;
-  }
-
-  next();
 };

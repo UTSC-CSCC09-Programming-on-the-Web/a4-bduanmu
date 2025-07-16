@@ -77,16 +77,21 @@ let apiService = (function () {
    *
    * When you press the Post button the form should
    * be submitted and the popup should close.
-   *
-   * Store the form data in localStorage
    */
 
   // add an image to the gallery
   module.addImage = function (formData) {
-    return fetch("/api/images/", {
+    return authFetch("/api/images/", {
       method: "POST",
       body: formData,
-    }).then((res) => res.json());
+    }).then((res) => {
+      if (!res.ok) {
+        return res.json().then((data) => {
+          throw new Error(data.error || "Failed to add image");
+        });
+      }
+      return res.json();
+    });
   };
 
   /**
@@ -117,13 +122,20 @@ let apiService = (function () {
 
   // add a comment to an image
   module.addComment = function (imageId, author, content) {
-    return fetch("/api/comments/", {
+    return authFetch("/api/comments/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ imageId, author, content }),
-    }).then((res) => res.json());
+    }).then((res) => {
+      if (!res.ok) {
+        return res.json().then((data) => {
+          throw new Error(data.error || "Failed to add comment");
+        });
+      }
+      return res.json();
+    });
   };
 
   // delete a comment to an image
@@ -152,22 +164,16 @@ let apiService = (function () {
       .then((data) => data.count);
   };
 
-  /**
-   * The following code was generated using the
-   * following Github Copilot prompt and manually editted:
-   *
-   * add a function that does this:const allComments =
-   * JSON.parse(localStorage.getItem("commentDatabase")) || [];
-   * const imageComments = allComments
-   * .filter((c) => c.imageId === imageId)
-   * .slice(pageNumber * 10, pageNumber * 10 + 10);
-   */
-
   // Get paginated comments for an image
   module.getImageComments = function (imageId, pageNumber) {
-    return fetch(`/api/images/${imageId}/comments?page=${pageNumber}`)
-      .then((res) => res.json())
-      .then((data) => data.comments);
+    return authFetch(`/api/images/${imageId}/comments?page=${pageNumber}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch comments: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then((data) => data.comments || []);
   };
 
   // Authentication API methods

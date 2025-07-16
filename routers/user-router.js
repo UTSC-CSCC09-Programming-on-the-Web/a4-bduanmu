@@ -115,7 +115,7 @@ usersRouter.post("/login", async (req, res) => {
   }
 });
 
-usersRouter.post("/logout", function (req, res, next) {
+usersRouter.post("/logout", function (res) {
   // With JWT, logout is handled client-side by removing the token
   // Server-side logout would require token blacklisting (more complex)
   res.json({

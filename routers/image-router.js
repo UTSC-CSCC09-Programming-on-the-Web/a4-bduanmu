@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Image } from "../models/image.js";
 import { Comment } from "../models/comment.js";
-import { isAuthenticated } from "../middleware/auth.js";
+import { authenticateToken } from "../middleware/jwt-auth.js";
 import path from "path";
 import multer from "multer";
 
@@ -14,7 +14,7 @@ export const imageRouter = Router();
  * Copilot autocomplete and manually editted:
  */
 
-imageRouter.post("/", upload.single("image"), isAuthenticated, async (req, res) => {
+imageRouter.post("/", upload.single("image"), authenticateToken, async (req, res) => {
   try {
     const { author, content } = req.body;
 
@@ -69,7 +69,7 @@ imageRouter.get("/", async (req, res) => {
       .status(200)
       .json({ message: "Images fetched successfully", images });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot fetch images" });
+    return res.status(500).json({ error });
   }
 });
 
@@ -122,7 +122,7 @@ imageRouter.get("/count", async (req, res) => {
       .status(200)
       .json({ message: "Image count fetched successfully", count });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot fetch image count" });
+    return res.status(500).json({ error });
   }
 });
 
@@ -142,7 +142,7 @@ imageRouter.get("/count/author/:authorUsername", async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ error: "Cannot fetch image count by author" });
+      .json({ error });
   }
 });
 
@@ -163,11 +163,11 @@ imageRouter.get("/:id", async (req, res) => {
       .status(200)
       .json({ message: "Image fetched successfully", image });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot fetch image" });
+    return res.status(500).json({ error });
   }
 });
 
-imageRouter.delete("/:id", isAuthenticated, async (req, res) => {
+imageRouter.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
@@ -191,7 +191,7 @@ imageRouter.delete("/:id", isAuthenticated, async (req, res) => {
       .status(200)
       .json({ message: "Image and associated comments deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot delete image" });
+    return res.status(500).json({ error });
   }
 });
 
@@ -213,11 +213,11 @@ imageRouter.get("/:id/file", async (req, res) => {
       root: path.resolve(),
     });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot fetch image file" });
+    return res.status(500).json({ error });
   }
 });
 
-imageRouter.get("/:id/comments", isAuthenticated, async (req, res) => {
+imageRouter.get("/:id/comments", authenticateToken, async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: "Invalid image ID" });
@@ -248,6 +248,6 @@ imageRouter.get("/:id/comments", isAuthenticated, async (req, res) => {
       .status(200)
       .json({ message: "Comments fetched successfully", comments });
   } catch (error) {
-    return res.status(500).json({ error: "Cannot fetch comments" });
+    return res.status(500).json({ error });
   }
 });
