@@ -49,20 +49,6 @@ jobs:
           username: root
           key: ${{ secrets.KEY }}
           script: |
-            # Navigate to your app directory (adjust path as needed)
-            cd ~/a4/a4-bduanmu
-            
-            # Create .env file with environment variables
-            cat > .env << EOF
-            # Environment Variables for Web Gallery App
-            
-            # JWT secret key - used for signing JWT tokens
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            JWT_EXPIRES_IN=24h
-            EOF
-            
-            # Set proper permissions for the .env file
-            chmod 600 .env
             
             # Wait a bit for the image to be available
             sleep 180
