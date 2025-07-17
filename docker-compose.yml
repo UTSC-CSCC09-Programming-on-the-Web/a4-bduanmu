@@ -24,7 +24,7 @@ services:
     environment:
       - DEFAULT_EMAIL=bduanmu@gmail.com
   backend:
-    image: ghcr.io/uoft-utsc-cs-sandbox/webgallery-bduanmu
+    image: ghcr.io/utsc-cscc09-programming-on-the-web/webgallery-bduanmu:latest
     container_name: backend
     restart: always
     expose:
