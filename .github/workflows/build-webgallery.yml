@@ -51,6 +51,6 @@ jobs:
           script: |
             # Wait a bit for the image to be available
             sleep 180
-            
+
             # Deploy the application
             docker compose pull && docker compose up -d

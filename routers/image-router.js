@@ -14,37 +14,42 @@ export const imageRouter = Router();
  * Copilot autocomplete and manually editted:
  */
 
-imageRouter.post("/", upload.single("image"), authenticateToken, async (req, res) => {
-  try {
-    const { author, content } = req.body;
+imageRouter.post(
+  "/",
+  upload.single("image"),
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { author, content } = req.body;
 
-    if (!author || !content) {
-      return res.status(400).json({ error: "Author and title are required" });
+      if (!author || !content) {
+        return res.status(400).json({ error: "Author and title are required" });
+      }
+
+      const imageFile = req.file
+        ? { path: req.file.path, mimetype: req.file.mimetype }
+        : null;
+
+      if (!imageFile) {
+        return res.status(400).json({ error: "Image file is required" });
+      }
+
+      const date = new Date();
+
+      const image = await Image.create({
+        author,
+        title: content,
+        image: imageFile,
+        date,
+      });
+
+      res.status(201).json({ message: "Image posted successfully", image });
+    } catch (error) {
+      console.error("Error creating image:", error);
+      return res.status(500).json({ error: "Cannot post image" });
     }
-
-    const imageFile = req.file
-      ? { path: req.file.path, mimetype: req.file.mimetype }
-      : null;
-
-    if (!imageFile) {
-      return res.status(400).json({ error: "Image file is required" });
-    }
-
-    const date = new Date();
-
-    const image = await Image.create({
-      author,
-      title: content,
-      image: imageFile,
-      date,
-    });
-
-    res.status(201).json({ message: "Image posted successfully", image });
-  } catch (error) {
-    console.error("Error creating image:", error);
-    return res.status(500).json({ error: "Cannot post image" });
-  }
-});
+  },
+);
 
 imageRouter.get("/", async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
@@ -140,9 +145,7 @@ imageRouter.get("/count/author/:authorUsername", async (req, res) => {
       .status(200)
       .json({ message: "Image count by author fetched successfully", count });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error });
+    return res.status(500).json({ error });
   }
 });
 
