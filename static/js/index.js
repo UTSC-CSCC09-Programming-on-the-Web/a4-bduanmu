@@ -20,8 +20,7 @@
     meact.useState(0);
   const [imageCount, getImageCount, setImageCount] = meact.useState(0);
   const [currentUser, getCurrentUser, setCurrentUser] = meact.useState(null);
-  const [galleryOwner, getGalleryOwner, setGalleryOwner] =
-    meact.useState("");
+  const [galleryOwner, getGalleryOwner, setGalleryOwner] = meact.useState("");
   const [homePageNumber, getHomePageNumber, setHomePageNumber] =
     meact.useState(0);
   const [homePageCount, getHomePageCount, setHomePageCount] = meact.useState(0);
