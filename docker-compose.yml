@@ -23,12 +23,13 @@ services:
       - ./acme:/etc/acme.sh
     environment:
       - DEFAULT_EMAIL=bduanmu@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
   backend:
     image: ghcr.io/utsc-cscc09-programming-on-the-web/webgallery-bduanmu
     container_name: backend
     restart: always
     expose:
-      - 3000
+      - 80
     environment:
       - VIRTUAL_HOST=webgallery.bduanmu.app
       - LETSENCRYPT_HOST=webgallery.bduanmu.app
