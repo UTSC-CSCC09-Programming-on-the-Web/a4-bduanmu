@@ -41,3 +41,13 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: "138.197.142.29"
+          username: root
+          key: ${{ secrets.KEY }}
+          script: |
+            sleep 180
+            docker compose pull && docker compose up -d
