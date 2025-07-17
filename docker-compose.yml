@@ -30,5 +30,5 @@ services:
     expose:
       - 3000
     environment:
-      - VIRTUAL_HOST=api.webgallery.bduanmu.app
-      - LETSENCRYPT_HOST=api.webgallery.bduanmu.app
+      - VIRTUAL_HOST=webgallery.bduanmu.app
+      - LETSENCRYPT_HOST=webgallery.bduanmu.app
