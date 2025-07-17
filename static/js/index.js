@@ -21,7 +21,7 @@
   const [imageCount, getImageCount, setImageCount] = meact.useState(0);
   const [currentUser, getCurrentUser, setCurrentUser] = meact.useState(null);
   const [galleryOwner, getGalleryOwner, setGalleryOwner] =
-    meact.useState("John");
+    meact.useState("");
   const [homePageNumber, getHomePageNumber, setHomePageNumber] =
     meact.useState(0);
   const [homePageCount, getHomePageCount, setHomePageCount] = meact.useState(0);
@@ -30,6 +30,9 @@
   window.initializeGalleryEvents = function () {
     // Update auth navigation
     setTimeout(updateAuthNav, 0);
+
+    // Update owner buttons and gallery title
+    setTimeout(updateOwnerButtons, 0);
 
     // Set up form and button event listeners (only once)
     setupGalleryEventListeners();
@@ -419,8 +422,8 @@
                   deleteBtn.addEventListener("click", function () {
                     deleteBtn.classList.add("button-loading", "disabled");
                     apiService.deleteComment(comment.id).then(() => {
-                      // Reset comment page to reload comments
-                      setCommentPageNumber(getCommentPageNumber());
+                      // Reload comments to show updated list
+                      loadImageComments();
                     });
                   });
                 }
