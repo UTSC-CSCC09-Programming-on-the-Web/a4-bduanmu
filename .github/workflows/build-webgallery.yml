@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             # Navigate to your app directory (adjust path as needed)
-            cd /root/a4-bduanmu
+            cd ~/a4/a4-bduanmu
             
             # Create .env file with environment variables
             cat > .env << EOF
